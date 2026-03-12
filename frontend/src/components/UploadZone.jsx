@@ -28,8 +28,7 @@ export default function UploadZone({ setResults, setLoading, setError, loading }
     formData.append("job_description", jd)
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/analyze", formData)
-      setResults(res.data)
+const res = await axios.post("https://autoapply-backend-rxkp.onrender.com/api/analyze", formData)      setResults(res.data)
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong. Is the backend running?")
     } finally {
