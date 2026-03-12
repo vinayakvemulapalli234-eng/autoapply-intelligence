@@ -13,7 +13,7 @@ export default function App() {
       minHeight: "100vh",
       background: "radial-gradient(ellipse at 20% 50%, #0d1f3c 0%, #0a0a0f 50%, #0d0d1f 100%)",
       display: "flex", flexDirection: "column", alignItems: "center",
-      padding: "0 24px 80px",
+      padding: "0 40px 80px",
       position: "relative", overflow: "hidden"
     }}>
       {/* 3D floating orbs */}
@@ -49,7 +49,7 @@ export default function App() {
 
       {/* Header */}
       <header style={{
-        width: "100%", maxWidth: "860px",
+        width: "100%", maxWidth: "1200px",
         padding: "36px 0 24px",
         display: "flex", justifyContent: "space-between", alignItems: "center",
         animation: "fadeUp 0.6s ease both"
@@ -81,7 +81,7 @@ export default function App() {
 
       {/* Hero */}
       <div style={{
-        textAlign: "center", marginBottom: "52px", maxWidth: "640px",
+        textAlign: "center", marginBottom: "52px", maxWidth: "700px",
         animation: "fadeUp 0.6s 0.1s ease both", opacity: 0,
         animationFillMode: "forwards"
       }}>
@@ -115,7 +115,7 @@ export default function App() {
 
       {/* Main Card */}
       <div style={{
-        width: "100%", maxWidth: "860px",
+        width: "100%", maxWidth: "1200px",
         background: "rgba(255,255,255,0.03)",
         border: "1px solid rgba(255,255,255,0.08)",
         borderRadius: "24px", padding: "40px",
@@ -136,7 +136,7 @@ export default function App() {
       {/* Error */}
       {error && (
         <div style={{
-          width: "100%", maxWidth: "860px", marginTop: "16px",
+          width: "100%", maxWidth: "1200px", marginTop: "16px",
           background: "rgba(255,107,53,0.08)",
           border: "1px solid rgba(255,107,53,0.25)",
           borderRadius: "12px", padding: "16px 20px",
@@ -149,7 +149,7 @@ export default function App() {
       {/* Loading */}
       {loading && (
         <div style={{
-          width: "100%", maxWidth: "860px", marginTop: "32px",
+          width: "100%", maxWidth: "1200px", marginTop: "32px",
           textAlign: "center", padding: "60px 0",
           background: "rgba(255,255,255,0.02)",
           border: "1px solid rgba(255,255,255,0.06)",
@@ -172,7 +172,7 @@ export default function App() {
 
       {/* Results */}
       {results && !loading && (
-        <div style={{ width: "100%", maxWidth: "860px", marginTop: "32px" }}>
+        <div style={{ width: "100%", maxWidth: "1200px", marginTop: "32px" }}>
           <Results data={results} />
         </div>
       )}
