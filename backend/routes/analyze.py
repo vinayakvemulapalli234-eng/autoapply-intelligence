@@ -16,25 +16,19 @@ async def analyze_resume(
     job_description: str = Form(...)
 ):
     try:
-        # Save uploaded PDF temporarily
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
             content = await resume.read()
             tmp.write(content)
             tmp_path = tmp.name
 
-        # Extract text from PDF
         resume_text = extract_text_from_pdf(tmp_path)
-        os.unlink(tmp_path)  # Delete temp file
+        os.unlink(tmp_path)
 
-        # Clean job description
         jd_text = extract_text_from_string(job_description)
 
-        # Run analysis
         match_data = calculate_match_score(resume_text, jd_text)
         ats_checks = check_ats_compatibility(resume_text)
         keyword_data = analyze_keyword_density(resume_text, jd_text)
-
-        # Get AI suggestions + cover letter
         ai_data = get_ai_suggestions(resume_text, jd_text, match_data)
 
         return JSONResponse({
@@ -52,18 +46,4 @@ async def analyze_resume(
         })
 
     except Exception as e:
-        err = str(e)
-        if "429" in err or "RESOURCE_EXHAUSTED" in err:
-            return JSONResponse(
-                {"error": "⏳ AI quota limit reached. Please try again in a few hours."},
-                status_code=429
-            )
-        if "API_KEY" in err or "api_key" in err:
-            return JSONResponse(
-                {"error": "🔑 API key error. Please check configuration."},
-                status_code=500
-            )
-        return JSONResponse(
-            {"error": "Something went wrong. Please try again."},
-            status_code=500
-        )
+        return JSONResponse({"error": str(e)}, status_code=500)
