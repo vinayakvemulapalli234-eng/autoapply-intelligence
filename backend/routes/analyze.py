@@ -52,4 +52,18 @@ async def analyze_resume(
         })
 
     except Exception as e:
-        return JSONResponse({"error": str(e)}, status_code=500)
+        err = str(e)
+        if "429" in err or "RESOURCE_EXHAUSTED" in err:
+            return JSONResponse(
+                {"error": "⏳ AI quota limit reached. Please try again in a few hours."},
+                status_code=429
+            )
+        if "API_KEY" in err or "api_key" in err:
+            return JSONResponse(
+                {"error": "🔑 API key error. Please check configuration."},
+                status_code=500
+            )
+        return JSONResponse(
+            {"error": "Something went wrong. Please try again."},
+            status_code=500
+        )
