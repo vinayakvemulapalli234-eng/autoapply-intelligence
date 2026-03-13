@@ -21,24 +21,18 @@ def extract_skills(text: str) -> list:
     return list(set(found))
 
 def calculate_match_score(resume_text: str, jd_text: str) -> dict:
-    # TF-IDF similarity
     vectorizer = TfidfVectorizer(stop_words='english')
     vectors = vectorizer.fit_transform([resume_text, jd_text])
     similarity = cosine_similarity(vectors[0], vectors[1])[0][0]
     match_score = round(similarity * 100, 1)
 
-    # Skill matching
     resume_skills = set(extract_skills(resume_text))
     jd_skills = set(extract_skills(jd_text))
 
     matched = list(resume_skills & jd_skills)
     missing = list(jd_skills - resume_skills)
 
-    # ATS score based on checklist-style scoring
-    ats_base = 50  # base score
-    ats_score = min(100, round(ats_base + match_score * 0.3 + len(matched) * 3))
-
-    # Hiring probability
+    ats_score = min(100, round(50 + match_score * 0.3 + len(matched) * 3))
     hiring_prob = min(100, round(match_score * 0.5 + len(matched) * 4 + 20))
 
     return {
