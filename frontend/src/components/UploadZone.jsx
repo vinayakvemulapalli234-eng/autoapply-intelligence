@@ -41,7 +41,7 @@ export default function UploadZone({ setResults, setLoading, setError, loading }
 
     try {
       const res = await axios.post("https://autoapply-backend-rxkp.onrender.com/api/analyze", formData, {
-        timeout: 120000
+        timeout: 1800000
       })
       setResults(res.data)
     } catch (err) {
