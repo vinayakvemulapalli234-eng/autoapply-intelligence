@@ -1,10 +1,22 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
 
 export default function UploadZone({ setResults, setLoading, setError, loading }) {
   const [resume, setResume] = useState(null)
   const [jd, setJd] = useState("")
   const [dragging, setDragging] = useState(false)
+  const [seconds, setSeconds] = useState(0)
+
+  useEffect(() => {
+    let timer
+    if (loading) {
+      setSeconds(0)
+      timer = setInterval(() => setSeconds(s => s + 1), 1000)
+    } else {
+      setSeconds(0)
+    }
+    return () => clearInterval(timer)
+  }, [loading])
 
   const handleFile = (file) => {
     if (file && file.type === "application/pdf") {
@@ -28,13 +40,22 @@ export default function UploadZone({ setResults, setLoading, setError, loading }
     formData.append("job_description", jd)
 
     try {
-      const res = await axios.post("https://autoapply-backend-rxkp.onrender.com/api/analyze", formData)
+      const res = await axios.post("https://autoapply-backend-rxkp.onrender.com/api/analyze", formData, {
+        timeout: 120000
+      })
       setResults(res.data)
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong. Is the backend running?")
     } finally {
       setLoading(false)
     }
+  }
+
+  const getLoadingMessage = () => {
+    if (seconds < 15) return "Analyzing your application..."
+    if (seconds < 40) return "Server is waking up, please wait..."
+    if (seconds < 70) return "Almost there, AI is thinking..."
+    return "Taking longer than usual, still working..."
   }
 
   return (
@@ -107,7 +128,7 @@ export default function UploadZone({ setResults, setLoading, setError, loading }
           opacity: loading ? 0.5 : 1, transition: "all 0.2s"
         }}
       >
-        {loading ? "⏳ Analyzing..." : "⚡ Analyze My Application"}
+        {loading ? `⏳ ${getLoadingMessage()} (${seconds}s)` : "⚡ Analyze My Application"}
       </button>
     </div>
   )

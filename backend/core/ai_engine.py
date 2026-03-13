@@ -1,15 +1,11 @@
-from google import genai
+from groq import Groq
 import os
 import json
 import re
 
-# Read directly from environment, don't use dotenv
-api_key = os.environ.get("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def get_ai_suggestions(resume_text: str, jd_text: str, match_data: dict) -> dict:
-    """Use Gemini to generate resume suggestions and cover letter."""
-
     prompt = f"""You are an expert career coach and resume writer.
 
 Analyze this resume against the job description and return ONLY a valid JSON object with no markdown, no explanation, no code blocks.
@@ -39,12 +35,14 @@ Return this exact JSON structure:
   "cover_letter": "Full professional cover letter text here (3-4 paragraphs)"
 }}"""
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+        max_tokens=1500
     )
-    
-    raw = response.text.strip()
+
+    raw = response.choices[0].message.content.strip()
     raw = re.sub(r'```json|```', '', raw).strip()
     json_match = re.search(r'\{[\s\S]*\}', raw)
     if json_match:
