@@ -4,4 +4,4 @@ python-multipart
 pdfminer.six
 python-dotenv
 scikit-learn
-google-genai
+groq
